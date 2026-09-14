@@ -1,0 +1,705 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#fbf6ed">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>振り返りレポート｜ひとつずつ進めるチェックリスト</title>
+<style>
+:root{
+  --bg:#fbf6ed; --card:#fffdfa; --ink:#3e372f; --sub:#7f766c;
+  --line:#eadcc7; --soft:#f5eadb; --green:#7f9d84; --green-soft:#eef5ef;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Hiragino Maru Gothic ProN","Hiragino Maru Gothic Pro","BIZ UDPGothic","M PLUS Rounded 1c","Yu Gothic UI","Noto Sans JP",-apple-system,BlinkMacSystemFont,Meiryo,sans-serif;letter-spacing:.02em;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+.statebox{position:absolute;left:-9999px;opacity:0}
+.app{max-width:760px;margin:auto;padding:28px calc(18px + env(safe-area-inset-right)) calc(56px + env(safe-area-inset-bottom)) calc(18px + env(safe-area-inset-left))}
+.hero{text-align:center;padding:18px 8px 8px}
+.hero-illustration{display:flex;justify-content:center;margin-bottom:6px}
+.hero-illustration svg{filter:drop-shadow(0 3px 4px rgba(120,90,50,.08))}
+.eyebrow{font-size:13px;color:var(--sub);letter-spacing:.08em}
+h1{font-size:clamp(29px,7vw,45px);line-height:1.25;margin:10px 0 16px}
+.hero p{font-size:15px;line-height:1.9;color:var(--sub);margin:0 auto;max-width:630px}
+.info{margin:24px 0 18px;background:#fff;border:1px solid var(--line);border-radius:22px;padding:17px 18px;font-size:13px;line-height:1.8;color:var(--sub)}
+.step-card{background:#fff;border:1px solid var(--line);border-radius:28px;padding:22px 20px;margin-top:18px;box-shadow:0 5px 18px rgba(80,60,35,.04)}
+.hidden{display:none}
+.step-kicker{font-size:13px;font-weight:700;color:var(--green);letter-spacing:.06em;margin-bottom:4px}
+h2{font-size:25px;line-height:1.35;margin:0 0 7px}
+.step-desc{font-size:14px;line-height:1.8;color:var(--sub);margin:0 0 16px}
+.item-card{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:18px;margin-top:14px}
+.item-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+.item-no{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--soft);font-size:13px;font-weight:700;margin-bottom:10px}
+.item-head .item-no{margin-bottom:0}
+.back-btn{-webkit-appearance:none;appearance:none;border:1px solid var(--line);border-radius:12px;background:#fff;color:var(--sub);font-size:12px;line-height:1;padding:9px 12px;cursor:pointer;touch-action:manipulation;white-space:nowrap}
+.back-btn:active{background:var(--soft)}
+.item-text{font-size:16px;line-height:1.85;margin:0 0 16px}
+.check-row{display:flex;align-items:center;gap:12px;min-height:44px;border:1px solid #c7d8ca;border-radius:16px;padding:15px 14px;background:#fff;cursor:pointer;-webkit-tap-highlight-color:transparent;user-select:none;touch-action:manipulation}
+.box{width:34px;height:34px;flex:0 0 34px;border-radius:10px;border:3px solid #a8c0ad;color:transparent;display:flex;align-items:center;justify-content:center;font-size:23px;font-weight:800;touch-action:manipulation}
+.reset{touch-action:manipulation}
+.check-label{font-size:15px;font-weight:700;line-height:1.5}
+.checked{display:none}
+.tiny{font-size:12px;color:var(--sub);margin:10px 2px 0}
+.step-done{margin-top:16px;padding:15px 16px;border-radius:18px;background:var(--green-soft);border:1px solid #cfe0d2;font-size:14px;line-height:1.75;font-weight:700}
+.all-done{margin-top:22px;padding:20px;border-radius:22px;text-align:center;background:#fff;border:1px solid var(--line);font-size:16px;line-height:1.8;font-weight:700}
+.controls{margin-top:24px;text-align:center}
+.reset{-webkit-appearance:none;appearance:none;font-family:inherit;display:inline-block;border:1px solid var(--line);border-radius:14px;background:#fff;color:var(--sub);padding:11px 14px;font-size:13px;text-decoration:none;cursor:pointer;touch-action:manipulation}
+.confirm-box{margin:14px auto 0;max-width:420px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:16px}
+.confirm-text{font-size:13px;line-height:1.8;color:var(--ink);margin:0 0 12px}
+.confirm-actions{display:flex;gap:10px;justify-content:center}
+.confirm-yes,.confirm-no{-webkit-appearance:none;appearance:none;border-radius:12px;font-size:13px;font-weight:700;padding:11px 16px;cursor:pointer;touch-action:manipulation}
+.confirm-yes{border:1px solid #c9463c;background:#c9463c;color:#fff}
+.confirm-no{border:1px solid var(--line);background:#fff;color:var(--sub)}
+.gate-card{background:var(--soft);border:1px dashed #cdb98f;border-radius:22px;padding:18px;margin-top:14px}
+.gate-text{font-size:14px;line-height:1.8;color:var(--ink);margin:0 0 12px;font-weight:700}
+.gate-row{display:flex;gap:8px}
+.gate-input{flex:1;min-width:0;-webkit-appearance:none;appearance:none;font-family:inherit;border:1px solid var(--line);border-radius:12px;background:#fff;color:var(--ink);font-size:16px;padding:12px 14px}
+.gate-input:focus{outline:2px solid var(--green);outline-offset:1px}
+.gate-btn{-webkit-appearance:none;appearance:none;font-family:inherit;border:1px solid var(--green);border-radius:12px;background:var(--green);color:#fff;font-size:14px;font-weight:700;padding:12px 18px;cursor:pointer;touch-action:manipulation;white-space:nowrap}
+.gate-btn:active{opacity:.85}
+.gate-error{font-size:12px;color:#c9463c;margin:10px 2px 0;font-weight:700}
+.gate-card.shake{animation:gate-shake .35s}
+@keyframes gate-shake{
+  0%,100%{transform:translateX(0)}
+  20%{transform:translateX(-6px)}
+  40%{transform:translateX(6px)}
+  60%{transform:translateX(-4px)}
+  80%{transform:translateX(4px)}
+}
+.footer{text-align:center;color:var(--sub);font-size:11px;line-height:1.8;margin-top:18px}
+.confetti-piece{position:fixed;top:-14px;z-index:9999;pointer-events:none;border-radius:2px;animation:confetti-fall linear forwards}
+@keyframes confetti-fall{
+  0%{transform:translateY(0) rotate(0deg);opacity:1}
+  100%{transform:translateY(112vh) rotate(680deg);opacity:.85}
+}
+.celebrate-banner{position:fixed;top:38%;left:50%;z-index:10000;pointer-events:none;text-align:center;font-size:clamp(26px,7vw,40px);font-weight:800;color:var(--ink);text-shadow:0 2px 10px rgba(255,255,255,.8);opacity:0;transform:translate(-50%,-50%) scale(.4)}
+.celebrate-banner.show{animation:celebrate-pop 1.8s ease forwards}
+@keyframes celebrate-pop{
+  0%{opacity:0;transform:translate(-50%,-50%) scale(.4)}
+  18%{opacity:1;transform:translate(-50%,-50%) scale(1.15)}
+  28%{transform:translate(-50%,-50%) scale(1)}
+  78%{opacity:1;transform:translate(-50%,-50%) scale(1)}
+  100%{opacity:0;transform:translate(-50%,-50%) scale(1)}
+}
+#c1:checked ~ .app label[for="c1"]{background:#eef5ef;border-color:#b9d0bd}
+#c1:checked ~ .app label[for="c1"] .box{background:#7f9d84;border-color:#7f9d84;color:#fff}
+#c1:checked ~ .app label[for="c1"] .unchecked{display:none}
+#c1:checked ~ .app label[for="c1"] .checked{display:inline}
+#c2:checked ~ .app label[for="c2"]{background:#eef5ef;border-color:#b9d0bd}
+#c2:checked ~ .app label[for="c2"] .box{background:#7f9d84;border-color:#7f9d84;color:#fff}
+#c2:checked ~ .app label[for="c2"] .unchecked{display:none}
+#c2:checked ~ .app label[for="c2"] .checked{display:inline}
+#c3:checked ~ .app label[for="c3"]{background:#eef5ef;border-color:#b9d0bd}
+#c3:checked ~ .app label[for="c3"] .box{background:#7f9d84;border-color:#7f9d84;color:#fff}
+#c3:checked ~ .app label[for="c3"] .unchecked{display:none}
+#c3:checked ~ .app label[for="c3"] .checked{display:inline}
+#c4:checked ~ .app label[for="c4"]{background:#eef5ef;border-color:#b9d0bd}
+#c4:checked ~ .app label[for="c4"] .box{background:#7f9d84;border-color:#7f9d84;color:#fff}
+#c4:checked ~ .app label[for="c4"] .unchecked{display:none}
+#c4:checked ~ .app label[for="c4"] .checked{display:inline}
+#c5:checked ~ .app label[for="c5"]{background:#eef5ef;border-color:#b9d0bd}
+#c5:checked ~ .app label[for="c5"] .box{background:#7f9d84;border-color:#7f9d84;color:#fff}
+#c5:checked ~ .app label[for="c5"] .unchecked{display:none}
+#c5:checked ~ .app label[for="c5"] .checked{display:inline}
+#c6:checked ~ .app label[for="c6"]{background:#eef5ef;border-color:#b9d0bd}
+#c6:checked ~ .app label[for="c6"] .box{background:#7f9d84;border-color:#7f9d84;color:#fff}
+#c6:checked ~ .app label[for="c6"] .unchecked{display:none}
+#c6:checked ~ .app label[for="c6"] .checked{display:inline}
+#c6:checked ~ .app #item7{display:block}
+#c7:checked ~ .app label[for="c7"]{background:#eef5ef;border-color:#b9d0bd}
+#c7:checked ~ .app label[for="c7"] .box{background:#7f9d84;border-color:#7f9d84;color:#fff}
+#c7:checked ~ .app label[for="c7"] .unchecked{display:none}
+#c7:checked ~ .app label[for="c7"] .checked{display:inline}
+#c7:checked ~ .app #item8{display:block}
+#c8:checked ~ .app label[for="c8"]{background:#eef5ef;border-color:#b9d0bd}
+#c8:checked ~ .app label[for="c8"] .box{background:#7f9d84;border-color:#7f9d84;color:#fff}
+#c8:checked ~ .app label[for="c8"] .unchecked{display:none}
+#c8:checked ~ .app label[for="c8"] .checked{display:inline}
+#c8:checked ~ .app #item9{display:block}
+#c9:checked ~ .app label[for="c9"]{background:#eef5ef;border-color:#b9d0bd}
+#c9:checked ~ .app label[for="c9"] .box{background:#7f9d84;border-color:#7f9d84;color:#fff}
+#c9:checked ~ .app label[for="c9"] .unchecked{display:none}
+#c9:checked ~ .app label[for="c9"] .checked{display:inline}
+#c9:checked ~ .app #doneStep2{display:block}
+#c9:checked ~ .app #step3{display:block}
+#c9:checked ~ .app #item10{display:block}
+#c10:checked ~ .app label[for="c10"]{background:#eef5ef;border-color:#b9d0bd}
+#c10:checked ~ .app label[for="c10"] .box{background:#7f9d84;border-color:#7f9d84;color:#fff}
+#c10:checked ~ .app label[for="c10"] .unchecked{display:none}
+#c10:checked ~ .app label[for="c10"] .checked{display:inline}
+#c10:checked ~ .app #item11{display:block}
+#c11:checked ~ .app label[for="c11"]{background:#eef5ef;border-color:#b9d0bd}
+#c11:checked ~ .app label[for="c11"] .box{background:#7f9d84;border-color:#7f9d84;color:#fff}
+#c11:checked ~ .app label[for="c11"] .unchecked{display:none}
+#c11:checked ~ .app label[for="c11"] .checked{display:inline}
+#c11:checked ~ .app #item12{display:block}
+#c12:checked ~ .app label[for="c12"]{background:#eef5ef;border-color:#b9d0bd}
+#c12:checked ~ .app label[for="c12"] .box{background:#7f9d84;border-color:#7f9d84;color:#fff}
+#c12:checked ~ .app label[for="c12"] .unchecked{display:none}
+#c12:checked ~ .app label[for="c12"] .checked{display:inline}
+#c12:checked ~ .app #item13{display:block}
+#c13:checked ~ .app label[for="c13"]{background:#eef5ef;border-color:#b9d0bd}
+#c13:checked ~ .app label[for="c13"] .box{background:#7f9d84;border-color:#7f9d84;color:#fff}
+#c13:checked ~ .app label[for="c13"] .unchecked{display:none}
+#c13:checked ~ .app label[for="c13"] .checked{display:inline}
+#c13:checked ~ .app #doneStep3{display:block}
+#c13:checked ~ .app #allDone{display:block}
+</style>
+</head>
+<body>
+<input class="statebox" type="checkbox" id="c1">
+<input class="statebox" type="checkbox" id="c2">
+<input class="statebox" type="checkbox" id="c3">
+<input class="statebox" type="checkbox" id="c4">
+<input class="statebox" type="checkbox" id="c5">
+<input class="statebox" type="checkbox" id="c6">
+<input class="statebox" type="checkbox" id="c7">
+<input class="statebox" type="checkbox" id="c8">
+<input class="statebox" type="checkbox" id="c9">
+<input class="statebox" type="checkbox" id="c10">
+<input class="statebox" type="checkbox" id="c11">
+<input class="statebox" type="checkbox" id="c12">
+<input class="statebox" type="checkbox" id="c13">
+<main class="app">
+  <header class="hero">
+    <div class="hero-illustration" aria-hidden="true">
+      <svg viewBox="0 0 120 120" width="76" height="76">
+        <ellipse cx="60" cy="102" rx="26" ry="5" fill="#eadcc7" opacity=".55"/>
+        <path d="M40 74 L80 74 L74 100 C74 103 68 105 60 105 C52 105 46 103 46 100 Z" fill="#e3b58c"/>
+        <path d="M38 74 L82 74 L84 82 L36 82 Z" fill="#d9a476"/>
+        <path d="M60 76 C60 60 46 54 40 40 C55 42 66 54 62 76 Z" fill="#7f9d84"/>
+        <path d="M60 76 C60 58 74 52 79 36 C64 40 54 54 58 76 Z" fill="#a3c0a8"/>
+        <path d="M60 76 C58 62 58 46 60 24 C65 40 65 58 60 76 Z" fill="#5f7d64"/>
+        <circle cx="60" cy="76" r="3.5" fill="#5f7d64"/>
+        <path d="M22 96 Q26 90 32 94" stroke="#c7d8ca" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <path d="M98 92 Q94 86 88 90" stroke="#c7d8ca" stroke-width="3" fill="none" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="eyebrow">振り返りレポート</div>
+    <h1>ひとつずつ進める<br>チェックリスト</h1>
+    <p>今取り組む項目だけが表示されます。<br>ここまで振り返れたと思ったらチェックを入れて、次へ進んでみましょう。</p>
+  </header>
+
+  <div class="info">
+    このチェックリストは、振り返りレポートを「正しく書けているか」を採点するものではありません。<br>
+    「よく分からない」「スタッフと相談したい」と感じたところは、無理に進めずスタッフと一緒に考えていきましょう🌿
+  </div>
+
+  <section class="step-card" id="step1">
+<div class="step-kicker">STEP 1</div>
+<h2>休職に至るまでの経過</h2>
+<p class="step-desc">まずは、元気だった頃から不調に至るまでを振り返っていきましょう🌿</p>
+
+        <div class="item-card" id="item1">
+          <div class="item-no">1</div>
+          <p class="item-text">元気だった時期も含め、人間関係や業務の内容・家庭環境やプライベート等の出来事が、時間の流れに沿って振り返られている</p>
+          <label class="check-row" for="c1">
+            <span class="box">✓</span>
+            <span class="check-label">
+              <span class="unchecked">ここまで振り返ることができた</span>
+              <span class="checked">ここまで振り返ることができた ✓</span>
+            </span>
+          </label>
+          <p class="tiny">チェックすると、パスワード入力欄が表示されます。</p>
+        </div>
+
+        <div class="gate-card hidden" id="gate1">
+          <p class="gate-text">🔒 次に進むには、スタッフから伝えられたパスワードを入力してください</p>
+          <div class="gate-row">
+            <input type="password" class="gate-input" id="gateInput1" placeholder="パスワード" autocomplete="off">
+            <button type="button" class="gate-btn" id="gateBtn1">進む</button>
+          </div>
+          <p class="gate-error hidden" id="gateError1">パスワードが違います。もう一度お試しください。</p>
+        </div>
+
+        <div class="item-card hidden" id="item2">
+          <div class="item-head">
+            <div class="item-no">2</div>
+            <button type="button" class="back-btn" data-back="1">◀ 一つ前に戻る</button>
+          </div>
+          <p class="item-text">出来事に対する気持ちや考えが、本人の言葉で書かれている</p>
+          <label class="check-row" for="c2">
+            <span class="box">✓</span>
+            <span class="check-label">
+              <span class="unchecked">ここまで振り返ることができた</span>
+              <span class="checked">ここまで振り返ることができた ✓</span>
+            </span>
+          </label>
+          <p class="tiny">チェックすると、パスワード入力欄が表示されます。</p>
+        </div>
+
+        <div class="gate-card hidden" id="gate2">
+          <p class="gate-text">🔒 次に進むには、スタッフから伝えられたパスワードを入力してください</p>
+          <div class="gate-row">
+            <input type="password" class="gate-input" id="gateInput2" placeholder="パスワード" autocomplete="off">
+            <button type="button" class="gate-btn" id="gateBtn2">進む</button>
+          </div>
+          <p class="gate-error hidden" id="gateError2">パスワードが違います。もう一度お試しください。</p>
+        </div>
+
+        <div class="item-card hidden" id="item3">
+          <div class="item-head">
+            <div class="item-no">3</div>
+            <button type="button" class="back-btn" data-back="2">◀ 一つ前に戻る</button>
+          </div>
+          <p class="item-text">どのような行動をとっていたか（我慢した・相談しなかった・何もしなかった等も含む）が書かれている</p>
+          <label class="check-row" for="c3">
+            <span class="box">✓</span>
+            <span class="check-label">
+              <span class="unchecked">ここまで振り返ることができた</span>
+              <span class="checked">ここまで振り返ることができた ✓</span>
+            </span>
+          </label>
+          <p class="tiny">チェックすると、パスワード入力欄が表示されます。</p>
+        </div>
+
+        <div class="gate-card hidden" id="gate3">
+          <p class="gate-text">🔒 次に進むには、スタッフから伝えられたパスワードを入力してください</p>
+          <div class="gate-row">
+            <input type="password" class="gate-input" id="gateInput3" placeholder="パスワード" autocomplete="off">
+            <button type="button" class="gate-btn" id="gateBtn3">進む</button>
+          </div>
+          <p class="gate-error hidden" id="gateError3">パスワードが違います。もう一度お試しください。</p>
+        </div>
+
+        <div class="item-card hidden" id="item4">
+          <div class="item-head">
+            <div class="item-no">4</div>
+            <button type="button" class="back-btn" data-back="3">◀ 一つ前に戻る</button>
+          </div>
+          <p class="item-text">行動の結果、どういう展開になっていったのかに気づけている</p>
+          <label class="check-row" for="c4">
+            <span class="box">✓</span>
+            <span class="check-label">
+              <span class="unchecked">ここまで振り返ることができた</span>
+              <span class="checked">ここまで振り返ることができた ✓</span>
+            </span>
+          </label>
+          <p class="tiny">チェックすると、パスワード入力欄が表示されます。</p>
+        </div>
+
+        <div class="gate-card hidden" id="gate4">
+          <p class="gate-text">🔒 次に進むには、スタッフから伝えられたパスワードを入力してください</p>
+          <div class="gate-row">
+            <input type="password" class="gate-input" id="gateInput4" placeholder="パスワード" autocomplete="off">
+            <button type="button" class="gate-btn" id="gateBtn4">進む</button>
+          </div>
+          <p class="gate-error hidden" id="gateError4">パスワードが違います。もう一度お試しください。</p>
+        </div>
+
+        <div class="item-card hidden" id="item5">
+          <div class="item-head">
+            <div class="item-no">5</div>
+            <button type="button" class="back-btn" data-back="4">◀ 一つ前に戻る</button>
+          </div>
+          <p class="item-text">一連の経過の中で、本人が繰り返しているパターンや「とらわれ」が見えてきているか</p>
+          <label class="check-row" for="c5">
+            <span class="box">✓</span>
+            <span class="check-label">
+              <span class="unchecked">ここまで振り返ることができた</span>
+              <span class="checked">ここまで振り返ることができた ✓</span>
+            </span>
+          </label>
+          <p class="tiny">チェックすると、パスワード入力欄が表示されます。</p>
+        </div>
+
+        <div class="gate-card hidden" id="gate5">
+          <p class="gate-text">🔒 次に進むには、スタッフから伝えられたパスワードを入力してください</p>
+          <div class="gate-row">
+            <input type="password" class="gate-input" id="gateInput5" placeholder="パスワード" autocomplete="off">
+            <button type="button" class="gate-btn" id="gateBtn5">進む</button>
+          </div>
+          <p class="gate-error hidden" id="gateError5">パスワードが違います。もう一度お試しください。</p>
+        </div>
+<div class="step-done hidden" id="doneStep1">STEP1 おつかれさまでした。次は、振り返りの中で見えてきた「気づき」を整理していきます。</div>
+</section>
+<section class="step-card hidden" id="step2">
+<div class="step-kicker">STEP 2</div>
+<h2>気づき</h2>
+<p class="step-desc">デイケアでの経験や、これまでを振り返る中で気づいたことを整理していきましょう🌱</p>
+
+        <div class="item-card hidden" id="item6">
+          <div class="item-head">
+            <div class="item-no">1</div>
+            <button type="button" class="back-btn" data-back="5">◀ 一つ前に戻る</button>
+          </div>
+          <p class="item-text">デイでの気づき・過去を振り返った気づき・都度増えていく気づき</p>
+          <label class="check-row" for="c6">
+            <span class="box">✓</span>
+            <span class="check-label">
+              <span class="unchecked">ここまで振り返ることができた</span>
+              <span class="checked">ここまで振り返ることができた ✓</span>
+            </span>
+          </label>
+          <p class="tiny">チェックすると、次の項目が表示されます。</p>
+        </div>
+
+        <div class="item-card hidden" id="item7">
+          <div class="item-head">
+            <div class="item-no">2</div>
+            <button type="button" class="back-btn" data-back="6">◀ 一つ前に戻る</button>
+          </div>
+          <p class="item-text">何かのせいになりすぎていないか（自分のせい、会社のせい、家族のせい、環境のせいなど）</p>
+          <label class="check-row" for="c7">
+            <span class="box">✓</span>
+            <span class="check-label">
+              <span class="unchecked">ここまで振り返ることができた</span>
+              <span class="checked">ここまで振り返ることができた ✓</span>
+            </span>
+          </label>
+          <p class="tiny">チェックすると、次の項目が表示されます。</p>
+        </div>
+
+        <div class="item-card hidden" id="item8">
+          <div class="item-head">
+            <div class="item-no">3</div>
+            <button type="button" class="back-btn" data-back="7">◀ 一つ前に戻る</button>
+          </div>
+          <p class="item-text">振り返りレポートの説明用紙に書いてあるポイントを踏まえて、デイケアへの参加を通して、自分自身について気づいたことが書けているか</p>
+          <label class="check-row" for="c8">
+            <span class="box">✓</span>
+            <span class="check-label">
+              <span class="unchecked">ここまで振り返ることができた</span>
+              <span class="checked">ここまで振り返ることができた ✓</span>
+            </span>
+          </label>
+          <p class="tiny">チェックすると、次の項目が表示されます。</p>
+        </div>
+
+        <div class="item-card hidden" id="item9">
+          <div class="item-head">
+            <div class="item-no">4</div>
+            <button type="button" class="back-btn" data-back="8">◀ 一つ前に戻る</button>
+          </div>
+          <p class="item-text">今の体調や気分について書けているか</p>
+          <label class="check-row" for="c9">
+            <span class="box">✓</span>
+            <span class="check-label">
+              <span class="unchecked">ここまで振り返ることができた</span>
+              <span class="checked">ここまで振り返ることができた ✓</span>
+            </span>
+          </label>
+          <p class="tiny">チェックすると、次の項目が表示されます。</p>
+        </div>
+<div class="step-done hidden" id="doneStep2">STEP2 おつかれさまでした。次は、不調のサインと今後の工夫を整理していきます。</div>
+</section>
+<section class="step-card hidden" id="step3">
+<div class="step-kicker">STEP 3</div>
+<h2>これから働き続けるための工夫</h2>
+<p class="step-desc">不調のサインと、自分に合った具体的な工夫をつなげて考えていきましょう🍀</p>
+
+        <div class="item-card hidden" id="item10">
+          <div class="item-head">
+            <div class="item-no">1</div>
+            <button type="button" class="back-btn" data-back="9">◀ 一つ前に戻る</button>
+          </div>
+          <p class="item-text">不調のサインとして身体面、睡眠だけでなく、気持ちや考え方、行動、対人面での変化も具体的に整理されている</p>
+          <label class="check-row" for="c10">
+            <span class="box">✓</span>
+            <span class="check-label">
+              <span class="unchecked">ここまで振り返ることができた</span>
+              <span class="checked">ここまで振り返ることができた ✓</span>
+            </span>
+          </label>
+          <p class="tiny">チェックすると、次の項目が表示されます。</p>
+        </div>
+
+        <div class="item-card hidden" id="item11">
+          <div class="item-head">
+            <div class="item-no">2</div>
+            <button type="button" class="back-btn" data-back="10">◀ 一つ前に戻る</button>
+          </div>
+          <p class="item-text">本人が比較的早い段階で気づけそうなサインが把握できている</p>
+          <label class="check-row" for="c11">
+            <span class="box">✓</span>
+            <span class="check-label">
+              <span class="unchecked">ここまで振り返ることができた</span>
+              <span class="checked">ここまで振り返ることができた ✓</span>
+            </span>
+          </label>
+          <p class="tiny">チェックすると、次の項目が表示されます。</p>
+        </div>
+
+        <div class="item-card hidden" id="item12">
+          <div class="item-head">
+            <div class="item-no">3</div>
+            <button type="button" class="back-btn" data-back="11">◀ 一つ前に戻る</button>
+          </div>
+          <p class="item-text">再発防止としての実現可能かつ具体的な対策が検討できている（デイケアや日常生活のなかで今現在実践できている対策がある）</p>
+          <label class="check-row" for="c12">
+            <span class="box">✓</span>
+            <span class="check-label">
+              <span class="unchecked">ここまで振り返ることができた</span>
+              <span class="checked">ここまで振り返ることができた ✓</span>
+            </span>
+          </label>
+          <p class="tiny">チェックすると、次の項目が表示されます。</p>
+        </div>
+
+        <div class="item-card hidden" id="item13">
+          <div class="item-head">
+            <div class="item-no">4</div>
+            <button type="button" class="back-btn" data-back="12">◀ 一つ前に戻る</button>
+          </div>
+          <p class="item-text">不調のサインと具体的対策が結びついて検討できている（要因で挙げたことと今後意識していくことがリンクして書けている）</p>
+          <label class="check-row" for="c13">
+            <span class="box">✓</span>
+            <span class="check-label">
+              <span class="unchecked">ここまで振り返ることができた</span>
+              <span class="checked">ここまで振り返ることができた ✓</span>
+            </span>
+          </label>
+          <p class="tiny">チェックすると、次の項目が表示されます。</p>
+        </div>
+<div class="step-done hidden" id="doneStep3">すべての項目を確認できました。ここまでの振り返りを、必要に応じてスタッフと一緒に見直してみましょう🌿</div>
+</section>
+
+  <div class="all-done hidden" id="allDone">🌿 すべての項目を確認できました。おつかれさまでした。</div>
+
+  <div class="celebrate-banner hidden" id="celebrateBanner">🎉 パーン！ 🎉</div>
+
+  <div class="controls">
+    <button type="button" class="reset" id="resetLink">進捗を最初からに戻す</button>
+    <div class="confirm-box hidden" id="resetConfirm">
+      <p class="confirm-text">チェックした進捗を最初からに戻しますか？</p>
+      <div class="confirm-actions">
+        <button type="button" class="confirm-yes" id="resetYes">はい、戻す</button>
+        <button type="button" class="confirm-no" id="resetNo">キャンセル</button>
+      </div>
+    </div>
+  </div>
+  <div class="footer">
+    同じ端末・同じブラウザで開いた場合は、対応している環境では途中から再開できます。<br>
+    ブラウザのデータを削除した場合や別の端末では、進捗が引き継がれないことがあります。
+  </div>
+</main>
+
+<script>
+/* ============================================================
+   ★ ステップ1のパスワード設定 ★
+   下の5つの値を書き換えるだけで、各項目のパスワードを
+   自由に変更できます（半角・全角どちらの文字も使えます）。
+   ============================================================
+   項目1「元気だった時期〜時間の流れに沿って振り返り」を
+        チェックした後に必要なパスワード
+   項目2「出来事に対する気持ちや考えが本人の言葉で」を
+        チェックした後に必要なパスワード
+   項目3「どのような行動をとっていたか」を
+        チェックした後に必要なパスワード
+   項目4「行動の結果、どういう展開になっていったか」を
+        チェックした後に必要なパスワード
+   項目5「繰り返しているパターンや『とらわれ』」を
+        チェックした後に必要なパスワード（通過するとSTEP2へ）
+   ============================================================ */
+const GATE_PASSWORDS = {
+  1: 'sora1',
+  2: 'sora2',
+  3: 'sora3',
+  4: 'sora4',
+  5: 'sora5'
+};
+/* ============================================================ */
+
+(function(){
+  const boxes = [...document.querySelectorAll('.statebox')];
+  const key = 'furikaeri_progress_v3';
+  const GATE_MAX = 5; // パスワードゲートを設定する項目数(ステップ1の項目1〜5)
+  const gatePasswords = GATE_PASSWORDS;
+
+  const unlocked = {}; // { 1:true, 2:true, ... } 該当項目のパスワードを通過済みか
+
+  function getStore() {
+    try { localStorage.setItem('__test__','1'); localStorage.removeItem('__test__'); return localStorage; }
+    catch(e) {
+      try { sessionStorage.setItem('__test__','1'); sessionStorage.removeItem('__test__'); return sessionStorage; }
+      catch(e2) { return null; }
+    }
+  }
+  const store = getStore();
+
+  try {
+    const saved = JSON.parse((store && store.getItem(key)) || '{}');
+    if (saved && typeof saved === 'object') {
+      (saved.checked || []).forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.checked = true;
+      });
+      (saved.unlocked || []).forEach(n => { unlocked[n] = true; });
+    }
+  } catch(e) {}
+
+  function clearGate(n) {
+    const input = document.getElementById('gateInput' + n);
+    if (input) input.value = '';
+    const err = document.getElementById('gateError' + n);
+    if (err) err.classList.add('hidden');
+  }
+
+  function updateVisibility() {
+    const state = boxes.map(b => b.checked);
+    const toggle = (id, cond) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      if (cond) { el.classList.remove('hidden'); el.style.display = ''; }
+      else { el.classList.add('hidden'); el.style.display = 'none'; }
+    };
+    for (let i = 1; i <= 12; i++) {
+      if (i <= GATE_MAX) {
+        toggle('item' + (i + 1), !!unlocked[i]);
+        toggle('gate' + i, state[i - 1] && !unlocked[i]);
+      } else {
+        toggle('item' + (i + 1), state[i - 1]);
+      }
+    }
+    toggle('doneStep1', !!unlocked[5]);
+    toggle('step2', !!unlocked[5]);
+    toggle('doneStep2', state[8]);
+    toggle('step3', state[8]);
+    toggle('doneStep3', state[12]);
+    toggle('allDone', state[12]);
+  }
+  updateVisibility();
+
+  function persist() {
+    try {
+      if (store) store.setItem(key, JSON.stringify({
+        checked: boxes.filter(b => b.checked).map(b => b.id),
+        unlocked: Object.keys(unlocked).filter(n => unlocked[n]).map(Number)
+      }));
+    } catch(e) {}
+  }
+
+  function celebrate() {
+    const colors = ['#f4a261','#e76f51','#7f9d84','#e9c46a','#a8c0ad','#c9463c','#f2c14e'];
+    for (let i = 0; i < 70; i++) {
+      const el = document.createElement('div');
+      el.className = 'confetti-piece';
+      el.style.left = (Math.random() * 100) + 'vw';
+      el.style.background = colors[Math.floor(Math.random() * colors.length)];
+      el.style.width = (6 + Math.random() * 6) + 'px';
+      el.style.height = (10 + Math.random() * 8) + 'px';
+      el.style.animationDuration = (2.4 + Math.random() * 1.6) + 's';
+      el.style.animationDelay = (Math.random() * 0.35) + 's';
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 4500);
+    }
+    const banner = document.getElementById('celebrateBanner');
+    banner.classList.remove('hidden', 'show');
+    void banner.offsetWidth;
+    banner.classList.add('show');
+    setTimeout(() => banner.classList.add('hidden'), 2000);
+  }
+
+  function attemptUnlock(n) {
+    const input = document.getElementById('gateInput' + n);
+    const err = document.getElementById('gateError' + n);
+    const gate = document.getElementById('gate' + n);
+    if (!input) return;
+    if (input.value === gatePasswords[n]) {
+      unlocked[n] = true;
+      input.value = '';
+      if (err) err.classList.add('hidden');
+      updateVisibility();
+      persist();
+      setTimeout(() => {
+        const next = document.getElementById('item' + (n + 1));
+        if (next) next.scrollIntoView({behavior:'smooth', block:'center'});
+      }, 120);
+    } else {
+      if (err) err.classList.remove('hidden');
+      if (gate) {
+        gate.classList.remove('shake');
+        void gate.offsetWidth;
+        gate.classList.add('shake');
+      }
+    }
+  }
+
+  for (let n = 1; n <= GATE_MAX; n++) {
+    const btn = document.getElementById('gateBtn' + n);
+    const input = document.getElementById('gateInput' + n);
+    if (btn) btn.addEventListener('click', () => attemptUnlock(n));
+    if (input) input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') { e.preventDefault(); attemptUnlock(n); }
+    });
+  }
+
+  function save(box) {
+    const idx = boxes.indexOf(box);
+    const gateNum = idx + 1;
+    if (!box.checked && gateNum <= GATE_MAX) {
+      unlocked[gateNum] = false;
+      clearGate(gateNum);
+    }
+    const wasAllDone = boxes[boxes.length - 1].id === box.id;
+    updateVisibility();
+    persist();
+    if (wasAllDone && box.checked) celebrate();
+    setTimeout(() => {
+      if (!box.checked) return;
+      if (gateNum <= GATE_MAX && !unlocked[gateNum]) {
+        const gate = document.getElementById('gate' + gateNum);
+        if (gate) gate.scrollIntoView({behavior:'smooth', block:'center'});
+        const input = document.getElementById('gateInput' + gateNum);
+        if (input) input.focus();
+      } else if (idx >= 0 && idx < boxes.length - 1) {
+        const next = document.getElementById('item' + (idx + 2));
+        if (next) next.scrollIntoView({behavior:'smooth', block:'center'});
+      }
+    }, 120);
+  }
+
+  boxes.forEach(box => box.addEventListener('change', () => save(box)));
+
+  document.querySelectorAll('.back-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const from = parseInt(btn.dataset.back, 10);
+      if (!from) return;
+      for (let i = from; i <= boxes.length; i++) {
+        const b = document.getElementById('c' + i);
+        if (b) b.checked = false;
+        if (i <= GATE_MAX) {
+          unlocked[i] = false;
+          clearGate(i);
+        }
+      }
+      updateVisibility();
+      persist();
+      const target = document.getElementById('item' + from);
+      if (target) target.scrollIntoView({behavior:'smooth', block:'center'});
+    });
+  });
+
+  const resetLink = document.getElementById('resetLink');
+  const resetConfirm = document.getElementById('resetConfirm');
+  const resetYes = document.getElementById('resetYes');
+  const resetNo = document.getElementById('resetNo');
+
+  resetLink.addEventListener('click', function(e){
+    e.preventDefault();
+    resetConfirm.classList.remove('hidden');
+    resetConfirm.scrollIntoView({behavior:'smooth', block:'center'});
+  });
+
+  resetNo.addEventListener('click', function(){
+    resetConfirm.classList.add('hidden');
+  });
+
+  resetYes.addEventListener('click', function(){
+    boxes.forEach(b => b.checked = false);
+    for (let n = 1; n <= GATE_MAX; n++) {
+      unlocked[n] = false;
+      clearGate(n);
+    }
+    updateVisibility();
+    try { if (store) store.removeItem(key); } catch(e) {}
+    resetConfirm.classList.add('hidden');
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+})();
+</script>
+</body>
+</html>
